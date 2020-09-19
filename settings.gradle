@@ -1,0 +1,3 @@
+include ':AshmemReader'
+include ':AshmemWriter'
+rootProject.name = "SharedMemory"
