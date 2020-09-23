@@ -9,4 +9,4 @@ Android Native SharedMemory Demo
 
 
 #### TODO
-- [ ] 不使用aidl传递fd
+- [x] 不使用aidl传递fd
