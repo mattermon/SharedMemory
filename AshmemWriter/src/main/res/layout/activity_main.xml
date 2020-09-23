@@ -20,13 +20,6 @@
         android:text="write"
         android:textAllCaps="false"
         tools:ignore="HardcodedText" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="sendFd"
-        android:text="sendFd"
-        android:textAllCaps="false"
-        tools:ignore="HardcodedText" />
 
     <Button
         android:layout_width="wrap_content"

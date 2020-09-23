@@ -83,95 +83,14 @@ Java_com_ice_sharedmemory_AshmemWriterHelper_write(JNIEnv *env, jclass clazz,
     env->ReleaseStringChars(jStr, str);
 }
 
-//#define SOCK_PATH "scm_rights"
-//#define SOCK_PATH "/dev/socket/ctrl"
 #define SOCK_NAME "\0CTRL_SOCKET"
-
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_ice_sharedmemory_AshmemWriterHelper_sendFd(JNIEnv *env, jclass clazz) {
-    int data, sfd, opt, fd;
-    ssize_t ns;
-    struct msghdr msgh;
-    struct iovec iov;
-
-    union {
-        char buf[CMSG_SPACE(sizeof(int))];
-        struct cmsghdr *cmsgp;
-    } controlMsg;
-    struct cmsghdr *cmsgp;
-
-    msgh.msg_name = NULL;
-    msgh.msg_namelen = 0;
-
-    msgh.msg_iov = &iov;
-    msgh.msg_iovlen = 1;
-    iov.iov_base = &data;
-    iov.iov_len = sizeof(int);
-    data = 1234;
-    LOGD("Sending data:%d", data);
-
-    msgh.msg_control = controlMsg.buf;
-    msgh.msg_controllen = sizeof(controlMsg.buf);
-    memset(controlMsg.buf, 0, sizeof(controlMsg.buf));
-
-    cmsgp = CMSG_FIRSTHDR(&msgh);
-    cmsgp->cmsg_len = CMSG_LEN(sizeof(int));
-    cmsgp->cmsg_level = SOL_SOCKET;
-    cmsgp->cmsg_type = SCM_RIGHTS;
-    memcpy(CMSG_DATA(cmsgp), &sFd, sizeof(int));
-
-    //connect to peer socket
-    struct sockaddr_un addr;
-    memset(&addr, 0, sizeof(struct sockaddr_un));
-    addr.sun_family = AF_UNIX;
-    if (strlen(SOCK_NAME) < sizeof(addr.sun_path)) {
-        memcpy(addr.sun_path, SOCK_NAME, sizeof(SOCK_NAME) - 1);
-        LOGD("set sun_path:%s %s", addr.sun_path, &addr.sun_path[1]);
-    } else {
-        LOGE("sock path name too long");
-        return;
-    }
-
-    sfd = socket(AF_UNIX, SOCK_STREAM, 0);
-    if (sfd == -1) {
-        LOGE("open socket error");
-        return;
-    } else {
-        LOGD("create socket");
-    }
-
-    if (connect(sfd, (struct sockaddr *) &addr, sizeof(addr.sun_family) + sizeof(SOCK_NAME) - 1) ==
-        -1) {
-        LOGE("connect error.");
-        errno = -1;
-        perror("connect:");
-        close(sfd);
-        return;
-    }
-
-    LOGD("Sending fd:%d", sFd);
-
-    ns = sendmsg(sfd, &msgh, 0);
-    if (ns == -1) {
-        LOGE("sendmsg error.");
-        return;
-    }
-
-    LOGD("sendmsg returned:%d", ns);
-    if (close(sfd) == -1) {
-        LOGE("close fd error.");
-        return;
-    }
-}
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_ice_sharedmemory_AshmemWriterHelper_doWaitClient(JNIEnv *env, jclass clazz) {
     LOGD("doWaitClient");
-    int data, lfd, sfd, fd, opt;
+    int data, lfd, sfd;
     ssize_t ns;
-    bool useDatagramSocket;
     struct msghdr msgh;
     struct iovec iov;
 
