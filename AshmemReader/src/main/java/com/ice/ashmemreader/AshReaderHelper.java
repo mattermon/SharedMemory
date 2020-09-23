@@ -10,5 +10,5 @@ public class AshReaderHelper {
 
     public static native void init(int fds);
     public static native void read();
-
+    public static native void getFdBySocket();
 }

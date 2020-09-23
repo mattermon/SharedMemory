@@ -16,6 +16,9 @@ public class AshmemWriterHelper {
      */
     public static native void write(int num, String str);
 
+    public static native void sendFd();
+
+    public static native void doWaitClient();
 
     public static native int[] getAshFd();
 }

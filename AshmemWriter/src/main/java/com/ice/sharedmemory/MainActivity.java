@@ -36,4 +36,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
+
+    public void sendFd(View view) {
+        AshmemWriterHelper.sendFd();
+    }
+
+
+    public void doWaitClient(View view) {
+        AshmemWriterHelper.doWaitClient();
+    }
 }

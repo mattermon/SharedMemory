@@ -16,22 +16,7 @@ import com.ice.ashmem.ISharedMem;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
-
-    public void init(View view) {
-        Intent intent = new Intent();
-        intent.setComponent(new ComponentName("com.ice.sharedmemory", "com.ice.sharedmemory.AshmService"));
-        bindService(intent, conn, Service.BIND_AUTO_CREATE);
-    }
-
-    public void read(View view) {
-        AshReaderHelper.read();
-    }
-
+    private String TAG = "Reader";
 
     ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -40,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 ParcelFileDescriptor descriptor = sharedMem.getSharedFd();
                 int fd = descriptor.getFd();
-                Log.d("Reader", "get fd: "+fd);
+                Log.d(TAG, "get fd: " + fd);
                 AshReaderHelper.init(descriptor.getFd());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -52,4 +37,34 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    public void init(View view) {
+//        Intent intent = new Intent();
+//        intent.setComponent(new ComponentName("com.ice.sharedmemory", "com.ice.sharedmemory.AshmService"));
+//        bindService(intent, conn, Service.BIND_AUTO_CREATE);
+
+        AshReaderHelper.init(0);
+    }
+
+    public void read(View view) {
+        AshReaderHelper.read();
+    }
+
+    public void getFdBySocket(View view) {
+        AshReaderHelper.getFdBySocket();
+    }
+
+
+
+
+
+
+
+
 }
