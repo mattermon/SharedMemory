@@ -77,7 +77,8 @@ Java_com_ice_sharedmemory_AshmemWriterHelper_write(JNIEnv *env, jclass clazz,
                                                    jint jNum, jstring jStr) {
     const auto *str = reinterpret_cast<const jchar *>(env->GetStringUTFChars(jStr, nullptr));
 
-    sData->num = jNum;
+    sData->inner.x = jNum;
+    sData->inner.y = jNum;
     memcpy(sData->str, str, strlen(reinterpret_cast<const char *const>(str)));
 
     env->ReleaseStringChars(jStr, str);

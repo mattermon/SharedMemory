@@ -53,7 +53,7 @@ Java_com_ice_ashmemreader_AshReaderHelper_read(JNIEnv *env, jclass clazz) {
         sData = (SharedData *) mmap(nullptr, sDataSize,
                                     PROT_READ, MAP_SHARED, sFd, 0);
     }
-    LOGD("read num:%d str:%s", sData->num, sData->str);
+    LOGD("read inner:%d %d str:%s", sData->inner.x, sData->inner.y, sData->str);
 }
 
 extern "C"
